@@ -9,7 +9,6 @@ export class Stage {
 
   constructor(canvas: HTMLCanvasElement) {
     this.renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' })
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
     this.renderer.outputColorSpace = THREE.SRGBColorSpace
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping
     this.renderer.toneMappingExposure = 1.05
@@ -32,6 +31,7 @@ export class Stage {
   resize() {
     const w = window.innerWidth
     const h = window.innerHeight
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, w * h > 1_200_000 ? 1.5 : 2))
     this.renderer.setSize(w, h, false)
     this.camera.aspect = w / h
     this.camera.updateProjectionMatrix()
