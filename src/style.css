@@ -157,7 +157,12 @@ p {
 }
 
 .credit {
-  font-size: 0.85rem;
+  font-size: 0.75rem;
+}
+
+.credit a {
+  color: inherit;
+  text-decoration: none;
 }
 
 a {
