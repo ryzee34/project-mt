@@ -250,6 +250,31 @@ a:hover {
   border-color: var(--accent);
 }
 
+.on-touch {
+  display: none;
+}
+
+@media (hover: none) {
+  .on-hover {
+    display: none;
+  }
+
+  .on-touch {
+    display: inline;
+  }
+}
+
+@media (max-width: 640px) {
+  #rail {
+    display: none;
+  }
+
+  .s-atom {
+    justify-content: flex-start;
+    padding-top: 10vh;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .hint::after {
     animation: none;

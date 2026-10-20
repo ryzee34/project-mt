@@ -1,19 +1,27 @@
 import * as THREE from 'three'
 import type { Stage } from './stage'
 
+interface Frame {
+  x: number
+  y: number
+  zoom: number
+}
+
 interface Key {
   s: number
   az: number
   el: number
   fit: 'assembled' | 'exploded' | 'atom'
+  wide: Frame
+  narrow: Frame
 }
 
 const KEYS: Key[] = [
-  { s: 0, az: 38, el: 9, fit: 'assembled' },
-  { s: 0.1, az: 30, el: 10, fit: 'assembled' },
-  { s: 0.44, az: -24, el: 17, fit: 'exploded' },
-  { s: 0.86, az: 22, el: 24, fit: 'atom' },
-  { s: 1, az: 22, el: 24, fit: 'atom' },
+  { s: 0, az: 38, el: 9, fit: 'assembled', wide: { x: 0.17, y: 0, zoom: 1.12 }, narrow: { x: 0, y: 0.13, zoom: 1.0 } },
+  { s: 0.1, az: 30, el: 10, fit: 'assembled', wide: { x: 0.17, y: 0, zoom: 1.12 }, narrow: { x: 0, y: 0.13, zoom: 1.0 } },
+  { s: 0.44, az: -24, el: 17, fit: 'exploded', wide: { x: 0.16, y: 0, zoom: 1.08 }, narrow: { x: 0, y: 0.04, zoom: 1.0 } },
+  { s: 0.86, az: 22, el: 24, fit: 'atom', wide: { x: -0.08, y: 0, zoom: 1.0 }, narrow: { x: 0, y: -0.1, zoom: 1.05 } },
+  { s: 1, az: 22, el: 24, fit: 'atom', wide: { x: 0, y: 0.1, zoom: 1.1 }, narrow: { x: 0, y: 0.1, zoom: 1.0 } },
 ]
 
 export const ATOM_VIEW = { az: 22, el: 24 }
@@ -39,11 +47,25 @@ export class CameraRig {
     const a = KEYS[i]!
     const b = KEYS[i + 1]!
     const t = ease(Math.min(1, Math.max(0, (s - a.s) / (b.s - a.s))))
+    const cam = this.stage.camera
+    const layout = cam.aspect > 1.1 ? 'wide' : 'narrow'
+    const fa = a[layout]
+    const fb = b[layout]
     const az = THREE.MathUtils.lerp(a.az, b.az, t) + (sway ? Math.sin(time * 0.21) * 3 : 0)
     const el = THREE.MathUtils.lerp(a.el, b.el, t) + (sway ? Math.sin(time * 0.17) * 1.5 : 0)
-    const dist = THREE.MathUtils.lerp(this.stage.fitDistance(this.radii[a.fit]), this.stage.fitDistance(this.radii[b.fit]), t)
-    const cam = this.stage.camera
-    cam.position.copy(this.center).addScaledVector(viewDirection(az, el).negate(), dist)
+    const dist = THREE.MathUtils.lerp(
+      this.stage.fitDistance(this.radii[a.fit]) * fa.zoom,
+      this.stage.fitDistance(this.radii[b.fit]) * fb.zoom,
+      t,
+    )
+    const dir = viewDirection(az, el).negate()
+    cam.position.copy(this.center).addScaledVector(dir, dist)
     cam.lookAt(this.center)
+
+    const w = window.innerWidth
+    const h = window.innerHeight
+    const x = THREE.MathUtils.lerp(fa.x, fb.x, t)
+    const y = THREE.MathUtils.lerp(fa.y, fb.y, t)
+    cam.setViewOffset(w, h, -x * w, y * h, w, h)
   }
 }
