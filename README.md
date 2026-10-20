@@ -2,7 +2,7 @@
 
 a scroll-driven exploded view of an MT09. as you scroll the bike comes apart with every part moving straight out from the engine, then everything settles into orbits around the engine like an atom. hover any part (or tap on a phone) to see what it is.
 
-built with three.js, typescript and vite.
+built with three.js, typescript and vite. live at https://ryzee34.github.io/project-mt/
 
 ## running it
 
