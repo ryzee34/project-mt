@@ -112,6 +112,11 @@ p {
   line-height: 1.55;
 }
 
+.lead {
+  color: var(--ink);
+  font-size: clamp(1.1rem, 2vw, 1.4rem);
+}
+
 .hint {
   margin-top: 28px;
   font-size: 0.8rem;
@@ -178,6 +183,29 @@ a:hover {
 #loader.is-done {
   opacity: 0;
   pointer-events: none;
+}
+
+#tip {
+  position: fixed;
+  z-index: 4;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: rgba(10, 11, 14, 0.85);
+  border: 1px solid var(--rail);
+  color: var(--ink);
+  font-size: 0.85rem;
+  font-weight: 500;
+  pointer-events: none;
+  white-space: nowrap;
+  transform: translate(14px, -50%);
+}
+
+#tip small {
+  display: block;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.04em;
 }
 
 #rail {

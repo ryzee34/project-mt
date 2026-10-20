@@ -1,6 +1,8 @@
 # project mt
 
-a scroll-driven exploded view of a three cylinder naked bike. as you scroll the bike comes apart with every part moving straight out from the engine, then everything settles into orbits around the engine like an atom. built with three.js, typescript and vite.
+a scroll-driven exploded view of a three cylinder naked bike. as you scroll the bike comes apart with every part moving straight out from the engine, then everything settles into orbits around the engine like an atom. hover any part to see what it is.
+
+built with three.js, typescript and vite.
 
 ## running it
 

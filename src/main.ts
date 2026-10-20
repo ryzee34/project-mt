@@ -5,9 +5,11 @@ import { buildParts } from './parts'
 import { BIKE_PARTS } from './bike-map'
 import { Explode } from './explode'
 import { ATOM_VIEW, CameraRig, viewDirection } from './rig'
+import { Hover } from './hover'
 
 const canvas = document.querySelector<HTMLCanvasElement>('#stage')!
 const loader = document.querySelector<HTMLElement>('#loader')!
+const tip = document.querySelector<HTMLElement>('#tip')!
 const railItems = [...document.querySelectorAll<HTMLElement>('#rail [data-stage]')]
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
 
@@ -36,12 +38,14 @@ async function boot() {
     exploded: explode.explodedRadius * 0.95,
     atom: explode.atomRadius * 1.02,
   })
+  const hover = new Hover(canvas, stage.camera, parts, tip)
 
   document.querySelectorAll('[data-count]').forEach((el) => (el.textContent = String(parts.length)))
 
   let shown = scrollProgress()
   let last = performance.now()
   let time = 0
+  let lastHover = 0
 
   const frame = (now: number) => {
     const dt = Math.min(0.05, (now - last) / 1000)
@@ -54,6 +58,9 @@ async function boot() {
     const motion = !reduceMotion.matches
     explode.update(shown, dt, motion)
     rig.update(shown, time, motion)
+    const moving = Math.abs(target - shown) > 1e-4 || (motion && shown > 0.86)
+    hover.update(moving && now - lastHover > 120)
+    if (moving && now - lastHover > 120) lastHover = now
     stage.render()
 
     const stageIndex = shown < 0.28 ? 0 : shown < 0.66 ? 1 : 2
