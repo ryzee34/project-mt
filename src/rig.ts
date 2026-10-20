@@ -20,8 +20,8 @@ const KEYS: Key[] = [
   { s: 0, az: 38, el: 9, fit: 'assembled', wide: { x: 0.17, y: 0, zoom: 1.12 }, narrow: { x: 0, y: 0.13, zoom: 1.0 } },
   { s: 0.1, az: 30, el: 10, fit: 'assembled', wide: { x: 0.17, y: 0, zoom: 1.12 }, narrow: { x: 0, y: 0.13, zoom: 1.0 } },
   { s: 0.44, az: -24, el: 17, fit: 'exploded', wide: { x: 0.16, y: 0, zoom: 1.08 }, narrow: { x: 0, y: 0.04, zoom: 1.0 } },
-  { s: 0.86, az: 22, el: 24, fit: 'atom', wide: { x: -0.08, y: 0, zoom: 1.0 }, narrow: { x: 0, y: -0.1, zoom: 1.05 } },
-  { s: 1, az: 22, el: 24, fit: 'atom', wide: { x: 0, y: 0.1, zoom: 1.1 }, narrow: { x: 0, y: 0.1, zoom: 1.0 } },
+  { s: 0.86, az: 22, el: 24, fit: 'atom', wide: { x: 0, y: 0, zoom: 1.0 }, narrow: { x: 0, y: 0, zoom: 1.0 } },
+  { s: 1, az: 22, el: 24, fit: 'atom', wide: { x: 0, y: 0.06, zoom: 1.22 }, narrow: { x: 0, y: 0.08, zoom: 1.05 } },
 ]
 
 export const ATOM_VIEW = { az: 22, el: 24 }

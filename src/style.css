@@ -61,8 +61,11 @@ section {
 .s-atom {
   min-height: 140vh;
   align-items: flex-start;
-  justify-content: flex-end;
-  padding-top: 18vh;
+  padding-top: 10vh;
+}
+
+.s-atom .copy {
+  max-width: 18rem;
 }
 
 .s-end {
@@ -70,6 +73,7 @@ section {
   align-items: flex-end;
   justify-content: center;
   text-align: center;
+  padding-bottom: clamp(16px, 3vh, 32px);
 }
 
 .copy {
@@ -276,11 +280,6 @@ a:hover {
 @media (max-width: 640px) {
   #rail {
     display: none;
-  }
-
-  .s-atom {
-    justify-content: flex-start;
-    padding-top: 10vh;
   }
 }
 
