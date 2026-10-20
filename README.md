@@ -18,3 +18,5 @@ npm run dev
 ```
 npx @gltf-transform/cli meshopt three_cylinder_naked_street_bike.glb public/models/bike.glb
 ```
+
+`src/bike-map.ts` groups the models ~1,000 named nodes into 49 parts and puts each one on a ring of the atom.
