@@ -7,6 +7,7 @@ import { Explode } from './explode'
 import { ATOM_VIEW, CameraRig, viewDirection } from './rig'
 import { Hover } from './hover'
 import { createBlueprint } from './blueprint'
+import { createDust } from './dust'
 
 const canvas = document.querySelector<HTMLCanvasElement>('#stage')!
 const loader = document.querySelector<HTMLElement>('#loader')!
@@ -37,6 +38,7 @@ async function boot() {
   const radius = { assembled: explode.assembledRadius, exploded: explode.explodedRadius, atom: explode.atomRadius }
   const floorY = Math.min(...parts.flatMap((p) => p.meshes.map((m) => p.center.y + m.geometry.boundingBox!.min.y)))
   const blueprint = createBlueprint({ stage, center: explode.center, floorY, orbitRadii: explode.orbitRadii, radius })
+  const dust = createDust({ stage, center: explode.center, radius })
   const rig = new CameraRig(stage, explode.center, {
     assembled: explode.assembledRadius * 0.92,
     exploded: explode.explodedRadius * 0.95,
@@ -66,6 +68,7 @@ async function boot() {
     hover.update(moving && now - lastHover > 120)
     if (moving && now - lastHover > 120) lastHover = now
     blueprint.update(shown, dt, motion)
+    dust.update(shown, dt, motion)
     stage.render()
 
     const stageIndex = shown < 0.28 ? 0 : shown < 0.66 ? 1 : 2
