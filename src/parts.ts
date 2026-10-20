@@ -125,6 +125,13 @@ function upgrade(material: THREE.Material) {
   if (!('emissive' in m)) {
     return new THREE.MeshStandardMaterial({ color: 0x888888, roughness: 0.5, metalness: 0.5 })
   }
+  const physical = m as THREE.MeshPhysicalMaterial
+  if (physical.transmission > 0) {
+    physical.transmission = 0
+    physical.transparent = true
+    physical.opacity = 0.35
+    physical.depthWrite = false
+  }
   return m
 }
 
