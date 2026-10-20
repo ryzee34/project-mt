@@ -38,6 +38,7 @@ export class Explode {
   readonly explodedRadius: number
   readonly atomRadius: number
   readonly orbitGroup = new THREE.Group()
+  readonly orbitRadii: number[] = []
   private tracks: Track[] = []
   private orbits: Orbit[] = []
   private target = new THREE.Vector3()
@@ -131,6 +132,7 @@ export class Explode {
       this.orbitGroup.add(line)
 
       const orbit: Orbit = { radius, u, v, speed: ORBIT_SPEED[k % 4]!, phase: 0, line }
+      this.orbitRadii.push(radius)
       this.orbits.push(orbit)
       order.forEach((idx, slot) => {
         const t = members[idx]!

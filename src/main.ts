@@ -6,6 +6,7 @@ import { BIKE_PARTS } from './bike-map'
 import { Explode } from './explode'
 import { ATOM_VIEW, CameraRig, viewDirection } from './rig'
 import { Hover } from './hover'
+import { createBlueprint } from './blueprint'
 
 const canvas = document.querySelector<HTMLCanvasElement>('#stage')!
 const loader = document.querySelector<HTMLElement>('#loader')!
@@ -33,10 +34,13 @@ async function boot() {
   const parts = buildParts(model, stage.root, BIKE_PARTS)
   const explode = new Explode(parts, viewDirection(ATOM_VIEW.az, ATOM_VIEW.el))
   stage.root.add(explode.orbitGroup)
+  const radius = { assembled: explode.assembledRadius, exploded: explode.explodedRadius, atom: explode.atomRadius }
+  const floorY = Math.min(...parts.flatMap((p) => p.meshes.map((m) => p.center.y + m.geometry.boundingBox!.min.y)))
+  const blueprint = createBlueprint({ stage, center: explode.center, floorY, orbitRadii: explode.orbitRadii, radius })
   const rig = new CameraRig(stage, explode.center, {
     assembled: explode.assembledRadius * 0.92,
     exploded: explode.explodedRadius * 0.95,
-    atom: explode.atomRadius * 1.02,
+    atom: Math.max(explode.atomRadius, blueprint.reach) * 1.02,
   })
   const hover = new Hover(canvas, stage.camera, parts, tip)
 
@@ -61,6 +65,7 @@ async function boot() {
     const moving = Math.abs(target - shown) > 1e-4 || (motion && shown > 0.86)
     hover.update(moving && now - lastHover > 120)
     if (moving && now - lastHover > 120) lastHover = now
+    blueprint.update(shown, dt, motion)
     stage.render()
 
     const stageIndex = shown < 0.28 ? 0 : shown < 0.66 ? 1 : 2
