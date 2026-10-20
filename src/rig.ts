@@ -5,15 +5,18 @@ interface Key {
   s: number
   az: number
   el: number
-  fit: 'assembled' | 'exploded'
+  fit: 'assembled' | 'exploded' | 'atom'
 }
 
 const KEYS: Key[] = [
   { s: 0, az: 38, el: 9, fit: 'assembled' },
   { s: 0.1, az: 30, el: 10, fit: 'assembled' },
   { s: 0.44, az: -24, el: 17, fit: 'exploded' },
-  { s: 1, az: -24, el: 17, fit: 'exploded' },
+  { s: 0.86, az: 22, el: 24, fit: 'atom' },
+  { s: 1, az: 22, el: 24, fit: 'atom' },
 ]
+
+export const ATOM_VIEW = { az: 22, el: 24 }
 
 const ease = (t: number) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2)
 
