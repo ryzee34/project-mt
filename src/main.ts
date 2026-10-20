@@ -1,13 +1,19 @@
 import './style.css'
-import * as THREE from 'three'
 import { Stage } from './stage'
 import { loadModel } from './load'
 import { buildParts } from './parts'
 import { BIKE_PARTS } from './bike-map'
+import { Explode } from './explode'
+import { CameraRig } from './rig'
 
 const canvas = document.querySelector<HTMLCanvasElement>('#stage')!
 const loader = document.querySelector<HTMLElement>('#loader')!
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
+
+function scrollProgress() {
+  const max = document.documentElement.scrollHeight - window.innerHeight
+  return max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0
+}
 
 async function boot() {
   const stage = new Stage(canvas)
@@ -22,10 +28,15 @@ async function boot() {
   loader.textContent = 'Taking it apart'
   await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)))
   const parts = buildParts(model, stage.root, BIKE_PARTS)
-  const box = new THREE.Box3()
-  for (const p of parts) box.expandByObject(p.pivot)
-  const sphere = box.getBoundingSphere(new THREE.Sphere())
+  const explode = new Explode(parts)
+  const rig = new CameraRig(stage, explode.center, {
+    assembled: explode.assembledRadius * 0.92,
+    exploded: explode.explodedRadius * 0.95,
+  })
 
+  document.querySelectorAll('[data-count]').forEach((el) => (el.textContent = String(parts.length)))
+
+  let shown = scrollProgress()
   let last = performance.now()
   let time = 0
 
@@ -33,15 +44,12 @@ async function boot() {
     const dt = Math.min(0.05, (now - last) / 1000)
     last = now
     time += dt
-    const sway = reduceMotion.matches ? 0 : Math.sin(time * 0.21) * 3
-    const az = THREE.MathUtils.degToRad(35 + sway)
-    const el = THREE.MathUtils.degToRad(10)
-    const cam = stage.camera
-    cam.position
-      .set(Math.sin(az) * Math.cos(el), Math.sin(el), Math.cos(az) * Math.cos(el))
-      .multiplyScalar(stage.fitDistance(sphere.radius))
-      .add(sphere.center)
-    cam.lookAt(sphere.center)
+    const target = scrollProgress()
+    shown += (target - shown) * (1 - Math.exp(-dt * 7))
+    if (Math.abs(target - shown) < 1e-4) shown = target
+
+    explode.update(shown)
+    rig.update(shown, time, !reduceMotion.matches)
     stage.render()
     requestAnimationFrame(frame)
   }
