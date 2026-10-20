@@ -4,6 +4,7 @@
   --ink: #ecebe6;
   --muted: #8d919b;
   --accent: #d9a35b;
+  --rail: rgba(236, 235, 230, 0.18);
   --font: "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 
@@ -57,9 +58,27 @@ section {
   min-height: 70vh;
 }
 
+.s-atom {
+  min-height: 140vh;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding-top: 18vh;
+}
+
+.s-end {
+  min-height: 100vh;
+  align-items: flex-end;
+  justify-content: center;
+  text-align: center;
+}
+
 .copy {
   max-width: 30rem;
   pointer-events: auto;
+}
+
+.s-end .copy {
+  max-width: 36rem;
 }
 
 .eyebrow {
@@ -128,6 +147,20 @@ p {
   }
 }
 
+.credit {
+  font-size: 0.85rem;
+}
+
+a {
+  color: var(--ink);
+  text-decoration-color: var(--accent);
+  text-underline-offset: 3px;
+}
+
+a:hover {
+  color: var(--accent);
+}
+
 #loader {
   position: fixed;
   inset: 0;
@@ -145,6 +178,48 @@ p {
 #loader.is-done {
   opacity: 0;
   pointer-events: none;
+}
+
+#rail {
+  position: fixed;
+  right: clamp(16px, 3vw, 36px);
+  top: 50%;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  transform: translateY(-50%);
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+#rail span {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  opacity: 0.45;
+  transition: opacity 0.3s ease, color 0.3s ease;
+}
+
+#rail span::after {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  border: 1px solid currentColor;
+}
+
+#rail span.is-on {
+  opacity: 1;
+  color: var(--ink);
+}
+
+#rail span.is-on::after {
+  background: var(--accent);
+  border-color: var(--accent);
 }
 
 @media (prefers-reduced-motion: reduce) {
