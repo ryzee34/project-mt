@@ -8,3 +8,13 @@ a scroll-driven exploded view of a motorcycle. built with three.js, typescript a
 npm install
 npm run dev
 ```
+
+## the model
+
+[Three Cylinder Naked Street Bike](https://sketchfab.com/3d-models/three-cylinder-naked-street-bike-0897a975845647919728095d117a6255) by [Jamie Hamel-Smith](https://sketchfab.com/jamie3d), licensed [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). i split it into parts and rearranged it for this page.
+
+`public/models/bike.glb` is the sketchfab glb run through meshopt so its 3.5 MB instead of 20 MB
+
+```
+npx @gltf-transform/cli meshopt three_cylinder_naked_street_bike.glb public/models/bike.glb
+```
