@@ -2,29 +2,12 @@ import './style.css'
 import * as THREE from 'three'
 import { Stage } from './stage'
 import { loadModel } from './load'
+import { buildParts } from './parts'
+import { BIKE_PARTS } from './bike-map'
 
 const canvas = document.querySelector<HTMLCanvasElement>('#stage')!
 const loader = document.querySelector<HTMLElement>('#loader')!
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
-
-function normalise(model: THREE.Object3D) {
-  const wrap = new THREE.Group()
-  wrap.add(model)
-  wrap.updateMatrixWorld(true)
-  const box = new THREE.Box3().setFromObject(wrap)
-  let size = box.getSize(new THREE.Vector3())
-  if (size.z > size.x) {
-    wrap.rotation.y = Math.PI / 2
-    wrap.updateMatrixWorld(true)
-    box.setFromObject(wrap)
-    size = box.getSize(new THREE.Vector3())
-  }
-  wrap.scale.setScalar(2 / size.x)
-  wrap.updateMatrixWorld(true)
-  box.setFromObject(wrap)
-  wrap.position.sub(box.getCenter(new THREE.Vector3()))
-  return wrap
-}
 
 async function boot() {
   const stage = new Stage(canvas)
@@ -36,9 +19,12 @@ async function boot() {
     return
   }
 
-  const bike = normalise(model)
-  stage.root.add(bike)
-  const sphere = new THREE.Box3().setFromObject(bike).getBoundingSphere(new THREE.Sphere())
+  loader.textContent = 'Taking it apart'
+  await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)))
+  const parts = buildParts(model, stage.root, BIKE_PARTS)
+  const box = new THREE.Box3()
+  for (const p of parts) box.expandByObject(p.pivot)
+  const sphere = box.getBoundingSphere(new THREE.Sphere())
 
   let last = performance.now()
   let time = 0
